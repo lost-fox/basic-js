@@ -21,10 +21,15 @@ import { NotImplementedError } from '../extensions/index.js';
  */
 export default class VigenereCipheringMachine {
  
+  constructor(mode = true) {
+    this.mode = mode;
+  }
+
   encrypt(message, key) {
-    if(!message|| !key){
+    if(message === undefined || key === undefined){
       throw new Error("Incorrect arguments!");
     }
+
   let codeMes=[];
 
   message = message.toUpperCase().split('').map(ascii);
@@ -44,7 +49,7 @@ export default class VigenereCipheringMachine {
       if(message[i]>64&&message[i]<91){
       let number = Math.abs(key[j] - 65);
       let letter = message[i]+number;
-      if (letter>91){
+      if (letter>90){
         letter = letter - 90 + 64
         codeMes.push(letter);
       }else{
@@ -60,11 +65,14 @@ export default class VigenereCipheringMachine {
       }
     }
   
+    if(!this.mode){
+      return codeMes.map(char).reverse().join('');
+    }
 
- return codeMes.map(char).join('');
+    return codeMes.map(char).join('');
   }
   decrypt(message, key) {
-    if(!message|| !key){
+    if(message === undefined || key === undefined){
       throw new Error("Incorrect arguments!");
     }
 
@@ -89,7 +97,7 @@ export default class VigenereCipheringMachine {
         if(message[i]>64&&message[i]<91){
           let letter;
         let number = Math.abs((message[i] - key[j]) + 65);
-        if (number<64){
+        if (number<65){
           letter = 91 - (65 - number);
           codeMes.push(letter);
         } else{
@@ -105,7 +113,9 @@ export default class VigenereCipheringMachine {
           j=0;
         }
       }
-    
+      if(!this.mode){
+        return codeMes.map(char).reverse().join('');
+      }
         return codeMes.map(char).join('');
       
   }

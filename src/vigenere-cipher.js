@@ -20,12 +20,93 @@ import { NotImplementedError } from '../extensions/index.js';
  * 
  */
 export default class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+ 
+  encrypt(message, key) {
+    if(!message|| !key){
+      throw new Error("Incorrect arguments!");
+    }
+  let codeMes=[];
+
+  message = message.toUpperCase().split('').map(ascii);
+  key = key.toUpperCase().split('').map(ascii);
+
+  function ascii(el){
+    let char = el.charCodeAt();
+    return char;
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  function char(el){
+    return String.fromCharCode(el);
+  }  
+    let i=0; let j=0;
+    while (i<message.length){
+      
+      if(message[i]>64&&message[i]<91){
+      let number = Math.abs(key[j] - 65);
+      let letter = message[i]+number;
+      if (letter>91){
+        letter = letter - 90 + 64
+        codeMes.push(letter);
+      }else{
+        codeMes.push(letter);
+      }
+      j++;
+      }else{
+        codeMes.push(message[i]);
+      }      
+      i++;      
+      if(j>=key.length){
+        j=0;
+      }
+    }
+  
+
+ return codeMes.map(char).join('');
+  }
+  decrypt(message, key) {
+    if(!message|| !key){
+      throw new Error("Incorrect arguments!");
+    }
+
+    let codeMes=[];
+
+    message = message.toUpperCase().split('').map(ascii);
+    key = key.toUpperCase().split('').map(ascii);
+  
+    function ascii(el){
+      let char = el.charCodeAt();
+      return char;
+    }
+  
+    function char(el){
+      return String.fromCharCode(el);
+    }
+  
+    
+      let i=0; let j=0;
+      while (i<message.length){
+        
+        if(message[i]>64&&message[i]<91){
+          let letter;
+        let number = Math.abs((message[i] - key[j]) + 65);
+        if (number<64){
+          letter = 91 - (65 - number);
+          codeMes.push(letter);
+        } else{
+          letter = number;
+          codeMes.push(letter);
+        }   
+        j++;
+        }else{
+          codeMes.push(message[i]);
+        }      
+        i++;      
+        if(j>=key.length){
+          j=0;
+        }
+      }
+    
+        return codeMes.map(char).join('');
+      
   }
 }
